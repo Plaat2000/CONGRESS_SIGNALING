@@ -1,0 +1,6 @@
+psycopg2-binary
+SQLAlchemy
+requests
+beautifulsoup4
+pydantic
+python-dotenv
