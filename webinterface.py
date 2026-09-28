@@ -82,6 +82,9 @@ def page(trades: list[dict], senator: str, ticker: str) -> str:
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         parsed = urlparse(self.path)
+        if parsed.path == "/health":
+            self._send("application/json", json.dumps({"status": "ok"}))
+            return
         values = parse_qs(parsed.query)
         senator = values.get("senator", [""])[0].strip()
         ticker = values.get("ticker", [""])[0].strip()
@@ -96,8 +99,6 @@ class Handler(BaseHTTPRequestHandler):
             self._send("application/json", json.dumps(trades, default=str))
         elif parsed.path in {"/", "/index.html"}:
             self._send("text/html; charset=utf-8", page(trades, senator, ticker))
-        elif parsed.path == "/health":
-            self._send("application/json", json.dumps({"status": "ok"}))
         else:
             self.send_error(404)
 
